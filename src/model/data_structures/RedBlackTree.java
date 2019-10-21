@@ -3,7 +3,7 @@ package model.data_structures;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class RedBlackTree<Key extends Comparable<Key>, Value> {
+public class RedBlackTree<Key extends Comparable<Key>, Value> implements IRedBlackTree<Key,Value>{
 
 	//--------------------------------------------------------
 	//Constantes
@@ -142,7 +142,7 @@ public class RedBlackTree<Key extends Comparable<Key>, Value> {
 	 * Retorna todas llaves del �rbol como un iterador
 	 * @return Iterator<Key> : iterador de todas las llaves del �rbol
 	 */
-	public Iterator<Key> keysIterator(){
+	public Iterator<Key> keys(){
 		DoublyLinkedList<Key> keys = new DoublyLinkedList<Key>();
 		if(root != null) {
 			root.keysList(keys);

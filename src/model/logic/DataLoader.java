@@ -3,98 +3,24 @@ package model.logic;
 import com.opencsv.CSVReader;
 
 import model.data_structures.DoublyLinkedList;
+import model.data_structures.RedBlackTree;
 import model.value_objects.GeoCoordinate;
-import model.value_objects.RoadNode;
 import model.value_objects.TravelArea;
-import model.value_objects.TravelTime;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
-
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Iterator;
-
 
 public class DataLoader {
 
-    public final static String TRAVEL_TIMES_FILE = "./data/bogota-cadastral-2018-#-All-HourlyAggregate.csv";
-    public final static String ROAD_NODES_FILE = "./data/Nodes_of_red_vial-wgs84_shp.txt";
+
     public final static String TRAVEL_AREAS_FILE = "./data/bogota_cadastral.json";
 
 
-    public void loadTravelTimes(DoublyLinkedList<TravelTime> data, int trimester){
-        CSVReader reader = null;
-        try {
 
-            reader = new CSVReader(new FileReader(TRAVEL_TIMES_FILE.replaceAll("#", String.valueOf(trimester))));
-
-            Iterator iter = reader.iterator();
-
-            iter.next();
-
-            while (iter.hasNext()){
-
-                String[] params = (String[]) iter.next();
-
-                data.addLast(new TravelTime(Integer.parseInt(params[0]), Integer.parseInt(params[1]),Integer.parseInt(params[2]), Double.parseDouble(params[3]),Double.parseDouble(params[4]) ));
-            }
-
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } finally{
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }
-    }
-
-    public void loadRoadNodes(DoublyLinkedList<RoadNode> data){
-        CSVReader reader = null;
-        try {
-
-            reader = new CSVReader(new FileReader(ROAD_NODES_FILE));
-
-            Iterator iter = reader.iterator();
-
-            iter.next();
-
-            while (iter.hasNext()){
-
-                String[] params = (String[]) iter.next();
-
-                data.addLast(new RoadNode(Integer.parseInt(params[0]), Double.parseDouble(params[1]), Double.parseDouble(params[2])));
-            }
-
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } finally{
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }
-    }
-
-
-
-
-
-    public void loadTravelAreas(DoublyLinkedList<TravelArea> data) {
+    public void loadTravelAreas(RedBlackTree<Integer, TravelArea> data) {
 
         FileReader file;
         try {
@@ -114,13 +40,13 @@ public class DataLoader {
     }
 
 
-    private void loadArrayOfAreas(JSONArray areas, DoublyLinkedList<TravelArea> data) {
+    private void loadArrayOfAreas(JSONArray areas, RedBlackTree<Integer, TravelArea> data) {
 
         if(areas != null) {
             for(int i = 0; i < areas.size(); i++) {
                 JSONObject areaJS = (JSONObject) areas.get(i);
                 TravelArea area = loadAreaData(areaJS);
-                data.addLast(area);
+                data.put(area.getID(), area);
             }
         }
     }

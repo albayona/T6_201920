@@ -3,97 +3,72 @@ package model.logic;
 
 import model.data_structures.DoublyLinkedList;
 import model.data_structures.Queue;
-import model.value_objects.RoadNode;
+import model.data_structures.RedBlackTree;
 import model.value_objects.TravelArea;
-import model.value_objects.TravelTime;
+
+import java.util.Comparator;
+import java.util.Iterator;
 
 /**
  * Definicion del modelo del mundo
  */
 public class MVCModel {
 
-    private DoublyLinkedList<TravelArea> areasData;
-    private DoublyLinkedList<RoadNode> roadNodesData;
-    private DoublyLinkedList<TravelTime> travelTimesData1;
-    private DoublyLinkedList<TravelTime> travelTimesData2;
+    private RedBlackTree<Integer, TravelArea> areasData;
+
 
 
     public MVCModel() {
-        areasData = new DoublyLinkedList<>();
-        roadNodesData = new DoublyLinkedList<>();
-        travelTimesData1 = new DoublyLinkedList<>();
-        travelTimesData2 = new DoublyLinkedList<>();
+        areasData = new RedBlackTree<>();
+
     }
 
-    public DoublyLinkedList<TravelArea> areasData() {
+    public RedBlackTree<Integer, TravelArea> areasData() {
         return areasData;
     }
 
-    public DoublyLinkedList<RoadNode> roadNodesData() {
-        return roadNodesData;
-    }
-
-    public DoublyLinkedList<TravelTime> travelTimesDataByTrimester(int trimester) {
-
-        if (trimester == 1) return travelTimesData1;
-        else if(trimester == 2) return travelTimesData2;
-
-        return null;
-    }
 
     public void loadData() {
 
         DataLoader d = new DataLoader();
 
         d.loadTravelAreas(areasData);
-        d.loadRoadNodes(roadNodesData);
-        d.loadTravelTimes(travelTimesData1, 1);
-        d.loadTravelTimes(travelTimesData2, 2);
     }
     
-    public Queue A1(int num) {
-    	return null;
+    public TravelArea getTravelArea(int ID) {
+
+        return areasData.get(ID);
     }
+
+
+    public DoublyLinkedList<TravelArea> getTravelAreas(int low, int hi){
+
+        DoublyLinkedList<TravelArea> list = new DoublyLinkedList<>();
+
+        for (Iterator<Integer> it = areasData.keysInRange(low, hi); it.hasNext(); ) {
+            Integer temp = it.next();
+
+            list.addLast(areasData.get(temp));
+        }
+
+        list.mergeSort(new IDComparator());
+
+        return  list;
+
+    }
+
+    private class IDComparator implements Comparator<TravelArea> {
+
+        @Override
+        public int compare(TravelArea o1, TravelArea o2) {
+            if (o1.getID() < o2.getID()) return -1;
+            if (o1.getID() > o2.getID()) return 1;
+            else return 0;
+        }
+    }
+
     
-    public Queue A2(double latitud, double longitud) {
-    	return null;
-    }
 
-    public Queue A3(double latitud, double longitud,int num) {
-    	return null;
-    }
-
-    public Queue B1(int num) {
-    	return null;
-    }
-
-
-    public Queue B2(double latitud, double longitud) {
-    	return null;
-    }
-
-
-    public Queue B3(double latitud, double longitud, int num) {
-    	return null;
-    }
-
-
-    public Queue C1(int id,int hour) {
-    	return null;
-    }
-
-    public Queue C2(int id,int hourIni,int hourFin) {
-    	return null;
-    }
-
-    public Queue C3(int num) {
-    	return null;
-    }
-
-    public int[] C4() {
-    	int[] ans = null;
-    	return ans;
-    }
 
 
 }
