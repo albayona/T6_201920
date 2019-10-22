@@ -10,7 +10,5 @@ public class MVC {
 
 		Controller controler = new Controller();
 		controler.run();
-
-
 	}
 }
